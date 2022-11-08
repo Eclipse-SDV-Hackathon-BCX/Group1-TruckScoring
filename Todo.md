@@ -1,0 +1,3 @@
+- Change single buttons to all buttons
+- Add + - numbers
+- Remove steering/ braking challenges
