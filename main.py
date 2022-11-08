@@ -27,15 +27,17 @@ def ms_to_score(time):
 
 def do_stuff():
     ecal_core.initialize(sys.argv, "reaction-test")
+    truck = TruckAPI()
+
     total_score = 0
-    max_timeout = 10 # seconds
-    max_wait = 5 # seconds
-    min_wait = 2 # seconds
+    max_timeout = 8 # seconds
+    max_wait = 3 # seconds
+    min_wait = 1 # seconds
     print("Starting game in 3 seconds!")
     time.sleep(3)
     while True:
         print("Total Score: {}\n\n".format(total_score))
-        test = random.randint(0, 6)
+        test = random.randint(0, 5)
         wait = random.random() * max_wait
         # wait = max(min_wait, wait)
 
@@ -43,24 +45,25 @@ def do_stuff():
 
         score = max_timeout
         test_name = "Error"
+        print(test)
         if test == 0:
             controller.set_task("Brake!")
-            score = ms_to_score(reaction_test_brake(max_timeout))
+            score = ms_to_score(truck.reaction_test_brake(max_timeout))
             test_name = "Braking Test"
         elif test == 1:
             controller.set_task("Steer Right!")
-            score = ms_to_score(reaction_right_steering(max_timeout))
+            score = ms_to_score(truck.reaction_right_steering(max_timeout))
             test_name = "Right Steering Test"
         elif test == 2:
             controller.set_task("Steer Left!")
-            score = ms_to_score(reaction_left_steering(max_timeout))
+            score = ms_to_score(truck.reaction_left_steering(max_timeout))
             test_name = "Left Steering Test"
         elif test > 2 and test <= 6:
             button_index = random.randint(0, 11)
             task_string = "Press Button: {}".format(button_index+1)
             controller.set_task(task_string)
             test_name = "Button test!"
-            score = ms_to_score(reaction_button(button_index, max_timeout))
+            score = ms_to_score(truck.reaction_button(button_index, max_timeout))
         print("{} - Score: {}".format(test_name, score))
         if score >= 0:
             controller.show_positive_change.emit(score)
@@ -70,13 +73,13 @@ def do_stuff():
         controller.set_score(total_score)
         controller.set_task("Wait")
 
-        lightbar_front(500)
+        truck.lightbar_front(500)
         time.sleep(0.5)
-        lightbar_front(500)
+        truck.lightbar_front(500)
         time.sleep(0.5)
-        lightbar_front(500)
+        truck.lightbar_front(500)
         time.sleep(0.5)
-        lightbar_front(500)
+        truck.lightbar_front(500)
         time.sleep(0.5)
         print("Lightbar")
 
