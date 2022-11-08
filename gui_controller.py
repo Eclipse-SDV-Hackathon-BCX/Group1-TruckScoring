@@ -24,7 +24,7 @@ class Controller(QObject):
         return str(self._score).zfill(3)
 
     def set_score(self, new_score: int):
-        self._score = new_score
+        self._score += new_score
         self.s_changed.emit()
 
     @Signal
