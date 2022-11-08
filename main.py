@@ -26,17 +26,23 @@ import ecal.core.core as ecal_core
 from ecal.core.subscriber import StringSubscriber
 
 
-def callback(_topic, msg, _time):
+ecal_core.initialize(sys.argv, "reaction-test")
+
+
+def callback_carla(_topic, msg, _time):
+    print("Carla Callback: {}".format(msg))
     if msg == "Crashed":
-        # Do total score - 100
+        controller.show_negative_change.emit(100)
+        controller.set_score(-100)
         controller.set_task("Collision!")
     if msg == "Crossed line Solid":
-        # Do total score - 20
+        controller.show_negative_change.emit(20)
+        controller.set_score(-20)
         controller.set_task("Crossed Solid Line!")
 
 
 sub = StringSubscriber("Carla")
-sub.set_callback(callback)
+sub.set_callback(callback_carla)
 
 def ms_to_score(time):
     time_ms = time / 1000.
@@ -44,7 +50,6 @@ def ms_to_score(time):
 
 
 def do_stuff():
-    ecal_core.initialize(sys.argv, "reaction-test")
     truck = TruckAPI()
 
     total_score = 420 # Starting score
