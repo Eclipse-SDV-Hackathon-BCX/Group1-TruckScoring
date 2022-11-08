@@ -8,6 +8,18 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
 
-        source: ""
+        source: "../res/background2.jpg"
+    }
+
+    Button {
+        opacity: 0
+        x: 14
+        y: 894
+        width: 583
+        height: 160
+
+        onClicked: {
+            pageLoader.source = "MainPage.qml"
+        }
     }
 }
