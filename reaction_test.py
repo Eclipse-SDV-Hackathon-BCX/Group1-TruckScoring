@@ -2,9 +2,9 @@ import sys
 import random
 import time
 
-import ecal_api.core.core as ecal_core
-from ecal_api.core.subscriber import ProtoSubscriber
-from ecal_api.core.publisher import ProtoPublisher
+import truck_api.core.core as ecal_core
+from truck_api.core.subscriber import ProtoSubscriber
+from truck_api.core.publisher import ProtoPublisher
 
 from PB.SensorNearData import Brake_pb2
 from PB.SensorNearData import VehicleDynamics_pb2

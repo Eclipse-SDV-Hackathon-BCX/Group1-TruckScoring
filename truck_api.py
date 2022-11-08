@@ -23,7 +23,6 @@ class TruckAPI:
     def lightbar_left_time(self, sleep_time_ms: int):
         pb_msg = W3Lightbar_pb2.W3LightbarRequest()
         pb_msg.Clear()
-        pb_msg.alley_light_left = True
         pb_msg.turn_signal_left = True
         self.light_pub.send(pb_msg)
         time.sleep(sleep_time_ms / 1000)
@@ -32,7 +31,6 @@ class TruckAPI:
     def lightbar_right_time(self, sleep_time_ms: int):
         pb_msg = W3Lightbar_pb2.W3LightbarRequest()
         pb_msg.Clear()
-        pb_msg.alley_light_right = True
         pb_msg.turn_signal_right = True
         self.light_pub.send(pb_msg)
         time.sleep(sleep_time_ms / 1000)
@@ -42,14 +40,14 @@ class TruckAPI:
     def lightbar_left(self):
         pb_msg = W3Lightbar_pb2.W3LightbarRequest()
         pb_msg.Clear()
-        pb_msg.alley_light_left = True
+        #pb_msg.alley_light_left = True
         pb_msg.turn_signal_left = True
         self.light_pub.send(pb_msg)
 
     def lightbar_right(self):
         pb_msg = W3Lightbar_pb2.W3LightbarRequest()
         pb_msg.Clear()
-        pb_msg.alley_light_right = True
+        #pb_msg.alley_light_right = True
         pb_msg.turn_signal_right = True
         self.light_pub.send(pb_msg)
 
@@ -66,6 +64,28 @@ class TruckAPI:
     def lightbar_off(self):
         pb_msg = W3Lightbar_pb2.W3LightbarRequest()
         pb_msg.Clear()
+        self.light_pub.send(pb_msg)
+
+    def lightbar_yellow_time(self, time_s: int):
+        self.lightbar_yellow()
+        time.sleep(time_s)
+        self.lightbar_off()
+
+    def lightbar_yellow(self):
+        pb_msg = W3Lightbar_pb2.W3LightbarRequest()
+        pb_msg.Clear()
+        pb_msg.three_sixty_degree_colour_2 = True
+        pb_msg.front_colour_2 = True
+        self.light_pub.send(pb_msg)
+
+    def lightbar_red_time(self, time_s: int):
+        self.lightbar_red()
+        time.sleep(time_s)
+        self.lightbar_off()
+    def lightbar_red(self):
+        pb_msg = W3Lightbar_pb2.W3LightbarRequest()
+        pb_msg.Clear()
+        pb_msg.red_warning_light = True
         self.light_pub.send(pb_msg)
 
 

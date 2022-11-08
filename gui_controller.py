@@ -2,7 +2,7 @@ from PySide2.QtCore import QObject, Property, Signal
 
 
 class Controller(QObject):
-    _driver_name = "Driver XY"
+    _driver_name = "Shawn"
     _score = 0
     _task = "Starting..."
 

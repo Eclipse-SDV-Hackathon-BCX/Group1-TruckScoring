@@ -4,7 +4,7 @@ from PySide2.QtGui import QGuiApplication
 from PySide2.QtQml import QQmlApplicationEngine
 from gui_controller import Controller
 
-from ecal_api import *
+from truck_api import *
 
 app = QGuiApplication(sys.argv)
 
@@ -20,6 +20,24 @@ controller.show_positive_change.connect(window.show_positive_change)
 controller.show_negative_change.connect(window.show_negative_change)
 
 
+# Lets do this here, so we can access the GUI elements
+
+import ecal.core.core as ecal_core
+from ecal.core.subscriber import StringSubscriber
+
+
+def callback(_topic, msg, _time):
+    if msg == "Crashed":
+        # Do total score - 100
+        controller.set_task("Collision!")
+    if msg == "Crossed line Solid":
+        # Do total score - 20
+        controller.set_task("Crossed Solid Line!")
+
+
+sub = StringSubscriber("Carla")
+sub.set_callback(callback)
+
 def ms_to_score(time):
     time_ms = time / 1000.
     return int(50 - (time_ms / 100))
@@ -29,12 +47,12 @@ def do_stuff():
     ecal_core.initialize(sys.argv, "reaction-test")
     truck = TruckAPI()
 
-    total_score = 0
-    max_timeout = 8 # seconds
-    max_wait = 3 # seconds
-    min_wait = 1 # seconds
-    print("Starting game in 3 seconds!")
-    time.sleep(3)
+    total_score = 420 # Starting score
+    max_timeout = 8 # seconds, max wait for a challenge
+    max_wait = 3 # seconds, max wait for a new challenge
+
+    print("Starting game in {} seconds!".format(max_wait))
+    time.sleep(max_wait)
     while True:
         print("Total Score: {}\n\n".format(total_score))
         test = random.randint(0, 5)
@@ -69,19 +87,25 @@ def do_stuff():
             controller.show_positive_change.emit(score)
         else:
             controller.show_negative_change.emit(abs(score))
+
         total_score += score
-        controller.set_score(total_score)
+        controller.set_score(score)
         controller.set_task("Wait")
 
-        truck.lightbar_front(500)
-        time.sleep(0.5)
-        truck.lightbar_front(500)
-        time.sleep(0.5)
-        truck.lightbar_front(500)
-        time.sleep(0.5)
-        truck.lightbar_front(500)
-        time.sleep(0.5)
-        print("Lightbar")
+        worst_possible_score = ms_to_score(max_timeout)
+
+        if score > worst_possible_score:
+            truck.lightbar_front(500)
+            time.sleep(0.5)
+            truck.lightbar_front(500)
+            time.sleep(0.5)
+            truck.lightbar_front(500)
+            time.sleep(0.5)
+            truck.lightbar_front(500)
+            time.sleep(0.5)
+        else:
+            truck.lightbar_red_time(2.0)
+
 
 worker_thread = Thread(target=do_stuff)
 worker_thread.start()
