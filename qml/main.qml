@@ -8,13 +8,13 @@ ApplicationWindow {
     visibility: "FullScreen"
     width: 600
     height: 500
-    title: "FUNDRIVE"
+    title: "Truckmania"
 
     Text {
         id: score_value
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
-        text: "000"
+        text: main_controller.score
 
         font.bold: true
         font.pointSize: 130
@@ -24,17 +24,31 @@ ApplicationWindow {
         id: driver_name
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: score_value.top
-        text: "Driver XY"
+        anchors.bottomMargin: 50
+        text: main_controller.driver_name
 
-        font.pointSize: 80
+        font.pointSize: 60
     }
 
     Text {
         id: task
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: score_value.bottom
-        text: "Do ABC"
+        anchors.topMargin: 100
+
+        text: main_controller.task
 
         font.pointSize: 80
+    }
+
+    Image {
+        id: avatar_image
+        width: 250
+        height: 250
+
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: driver_name.top
+
+        source: "../res/avatar.jpg"
     }
 }
