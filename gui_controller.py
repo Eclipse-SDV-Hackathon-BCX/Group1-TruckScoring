@@ -4,7 +4,7 @@ from PySide2.QtCore import QObject, Property, Signal
 class Controller(QObject):
     _driver_name = "Driver XY"
     _score = 0
-    _task = "Do ABC"
+    _task = "Starting..."
 
     show_positive_change = Signal(int, arguments=['change'])
     show_negative_change = Signal(int, arguments=['change'])
