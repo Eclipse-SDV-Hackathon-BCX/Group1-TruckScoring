@@ -2,6 +2,18 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 
 ApplicationWindow {
+    function show_positive_change(change){
+        positive_change.text = '+' + change.toString();
+        positive_change.visible = true;
+        positive_change_animation.restart();
+    }
+
+    function show_negative_change(change){
+        negative_change.text = '-' + change.toString();
+        negative_change.visible = true;
+        negative_change_animation.restart();
+    }
+
     id: window
 
     visible: true
@@ -39,6 +51,50 @@ ApplicationWindow {
         text: main_controller.task
 
         font.pointSize: 80
+    }
+
+    Text {
+        id: positive_change
+        visible: false
+        anchors.left: score_value.right
+        anchors.verticalCenter: score_value.verticalCenter
+        anchors.leftMargin: 50
+
+        text: "+10"
+
+        color: "green"
+        font.pointSize: 40
+    }
+
+    PropertyAnimation {
+        id: positive_change_animation
+        running: true
+        target: positive_change
+        property: 'visible'
+        to: false
+        duration: 1500
+    }
+
+    Text {
+        id: negative_change
+        visible: false
+        anchors.left: score_value.right
+        anchors.verticalCenter: score_value.verticalCenter
+        anchors.leftMargin: 50
+
+        text: "-10"
+
+        color: "red"
+        font.pointSize: 40
+    }
+
+    PropertyAnimation {
+        id: negative_change_animation
+        running: true
+        target: negative_change
+        property: 'visible'
+        to: false
+        duration: 1500
     }
 
     Image {

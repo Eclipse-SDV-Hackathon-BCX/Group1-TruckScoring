@@ -6,6 +6,9 @@ class Controller(QObject):
     _score = 0
     _task = "Do ABC"
 
+    show_positive_change = Signal(int, arguments=['change'])
+    show_negative_change = Signal(int, arguments=['change'])
+
     def get_driver_name(self):
         return self._driver_name
 
