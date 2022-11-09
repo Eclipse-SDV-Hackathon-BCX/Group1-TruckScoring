@@ -2,6 +2,21 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 
 Item {
+    Connections {
+        target: main_controller
+
+        function onShow_positive_change(change) {
+            positive_change.text = '+' + change.toString();
+            positive_change.visible = true;
+            positive_change_animation.restart();
+        }
+
+        function onShow_negative_change(change) {
+            negative_change.text = '-' + change.toString();
+            negative_change.visible = true;
+            negative_change_animation.restart();
+        }
+    }
     anchors.fill: parent
 
     Image {
@@ -40,8 +55,9 @@ Item {
         id: positive_change
         visible: false
         anchors.left: score_value.right
-        anchors.verticalCenter: score_value.verticalCenter
-        anchors.leftMargin: 50
+        anchors.bottom: score_value.top
+        anchors.leftMargin: -50
+        anchors.bottomMargin: -150
 
         text: "+10"
 
@@ -62,9 +78,9 @@ Item {
         id: negative_change
         visible: false
         anchors.left: score_value.right
-        anchors.verticalCenter: score_value.verticalCenter
-        anchors.leftMargin: 50
-
+        anchors.top: score_value.bottom
+        anchors.topMargin: -200
+        anchors.leftMargin: -50
         text: "-10"
 
         color: "red"

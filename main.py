@@ -16,8 +16,6 @@ engine.rootContext().setContextProperty("main_controller", controller)
 engine.load('qml/main.qml')
 
 window = engine.rootObjects()[0]
-#controller.show_positive_change.connect(window.show_positive_change)
-#controller.show_negative_change.connect(window.show_negative_change)
 
 
 # Lets do this here, so we can access the GUI elements
