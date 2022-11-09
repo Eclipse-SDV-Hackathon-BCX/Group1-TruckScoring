@@ -64,15 +64,22 @@ Item {
         color: "green"
         font.pointSize: 100
     }
-
-    PropertyAnimation {
+    ParallelAnimation {
         id: positive_change_animation
-        running: true
-        target: positive_change
-        property: 'visible'
-        to: false
-        duration: 1500
+        PropertyAnimation {
+            target: positive_change
+            property: 'visible'
+            to: false
+            duration: 1500
+        }
+        PropertyAnimation {
+            target: positive_change
+            property: 'anchors.bottomMargin'
+            to: 1050
+            duration: 1500
+        }
     }
+
 
     Text {
         id: negative_change
@@ -87,13 +94,20 @@ Item {
         font.pointSize: 100
     }
 
-    PropertyAnimation {
+    ParallelAnimation {
         id: negative_change_animation
-        running: true
-        target: negative_change
-        property: 'visible'
-        to: false
-        duration: 1500
+        PropertyAnimation {
+            target: negative_change
+            property: 'visible'
+            to: false
+            duration: 1500
+        }
+        PropertyAnimation {
+            target: negative_change
+            property: 'anchors.topMargin'
+            to: 1000
+            duration: 1500
+        }
     }
 
     Button {
