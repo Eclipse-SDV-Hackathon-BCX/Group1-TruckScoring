@@ -1,3 +1,4 @@
-- Change single buttons to all buttons
-- Add + - numbers
-- Remove steering/ braking challenges
+- [x] Change single buttons to all buttons
+- [ ] Add + - numbers
+- [x] Remove steering/ braking challenges
+- [x] Add points over time
