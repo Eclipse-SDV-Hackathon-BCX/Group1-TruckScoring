@@ -6,12 +6,14 @@ Item {
         target: main_controller
 
         function onShow_positive_change(change) {
+            positive_change.anchors.bottomMargin = -150;
             positive_change.text = '+' + change.toString();
             positive_change.visible = true;
             positive_change_animation.restart();
         }
 
         function onShow_negative_change(change) {
+            negative_change.anchors.topMargin = -200;
             negative_change.text = '-' + change.toString();
             negative_change.visible = true;
             negative_change_animation.restart();

@@ -3,7 +3,7 @@ import random
 import time
 
 import ecal.core.core as ecal_core
-from ecal.core.subscriber import ProtoSubscriber
+from ecal.core.subscriber import ProtoSubscriber, StringSubscriber
 from ecal.core.publisher import ProtoPublisher
 
 from PB.SensorNearData import Brake_pb2
@@ -19,6 +19,8 @@ class TruckAPI:
         self.brake_sub = ProtoSubscriber("BrakeInPb", Brake_pb2.Brake)
         self.sub_steering = ProtoSubscriber("VehicleDynamicsInPb", VehicleDynamics_pb2.VehicleDynamics)
         self.sub_keyboard = ProtoSubscriber("HmiCanKeyboardStatePb", HMICanKeyboard_pb2.HmiCanKeyboardState)
+
+        self.sub_speed = StringSubscriber("Velocity")
 
     def lightbar_left_time(self, sleep_time_ms: int):
         pb_msg = W3Lightbar_pb2.W3LightbarRequest()
@@ -188,3 +190,42 @@ class TruckAPI:
 
         score = end_time - start_time
         return score
+
+    def can_slow_down(self, timeout: int):
+        topic, msg, time = self.sub_speed.receive(500)
+        print(msg)
+        if msg == '':
+            return
+        speed = float(msg) * 3.6
+        if speed > 16.0:
+            return True
+        return False
+    def reaction_slow_down(self, timeout: int):
+        start_time = ecal_core.getmicroseconds()[1]
+        end_time = start_time + 1000*1000 * timeout
+
+        topic, msg, time = self.sub_speed.receive(500)
+        if msg == '':
+            return 0
+        speed = float(msg) * 3.6
+
+        if speed < 15.0:
+            return 0
+
+        target_speed = speed - 10.0;
+        print("Target speed: {}".format(target_speed))
+        while ecal_core.ok():
+            if ecal_core.getmicroseconds()[1] > end_time:
+                break
+            topic, msg, time = self.sub_speed.receive(500)
+            if msg == '':
+                return 0
+            speed = float(msg) * 3.6
+
+            if speed <= target_speed:
+                print("Slowed down: {}".format(speed))
+                end_time = ecal_core.getmicroseconds()[1]
+                break
+
+        return end_time - start_time
+

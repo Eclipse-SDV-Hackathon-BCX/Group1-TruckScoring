@@ -46,7 +46,7 @@ sub.set_callback(callback_carla)
 # We don't want to share the controller, so we will set a callback to the
 # eCAL brake topic, as it gets polled every 10ms.
 
-points_per_duration = 5 # points per duration
+points_per_duration = 50 # points per duration
 duration_for_points = 5 # seconds
 last_point_time = ecal_core.getmicroseconds()[1]
 def give_points_over_time_cb(topic, msg, time):
@@ -55,7 +55,7 @@ def give_points_over_time_cb(topic, msg, time):
     global duration_for_points
     if last_point_time + duration_for_points * 1000 * 1000 < ecal_core.getmicroseconds()[1]:
         controller.set_score(points_per_duration)
-        print("Award points!")
+        controller.show_positive_change.emit(points_per_duration)
         last_point_time = ecal_core.getmicroseconds()[1]
 
 
@@ -67,7 +67,7 @@ def ms_to_score(time):
     return int(50 - (time_ms / 100))
 
 
-def do_stuff():
+def challenge_loop():
     truck = TruckAPI()
 
     total_score = 420 # Starting score
@@ -83,15 +83,29 @@ def do_stuff():
 
         time.sleep(wait)
 
-        task_string = "Press Button"
-        controller.set_task(task_string)
-        test_name = "Button test!"
-        score = ms_to_score(truck.reaction_button(max_timeout))
+        test_decision = random.randint(0,1)
+
+        score = 0
+        test_name = ""
+        if test_decision == 0:
+            task_string = "Press Button"
+            controller.set_task(task_string)
+            test_name = "Button test!"
+            score = ms_to_score(truck.reaction_button(max_timeout))
+        elif truck.can_slow_down(1) and test_decision == 1:
+            controller.set_task("Slow Down")
+            test_name = "Slow Down"
+            score = ms_to_score(truck.reaction_slow_down(max_timeout))
+        elif test_decision == 1:
+            print("Too slow for stop challenge")
+
         print("{} - Score: {}".format(test_name, score))
-        if score >= 0:
+
+        if score > 0:
             controller.show_positive_change.emit(score)
-        else:
+        elif score < 0:
             controller.show_negative_change.emit(abs(score))
+
 
         total_score += score
         controller.set_score(score)
@@ -112,7 +126,7 @@ def do_stuff():
             truck.lightbar_red_time(2.0)
 
 
-worker_thread = Thread(target=do_stuff)
+worker_thread = Thread(target=challenge_loop)
 worker_thread.start()
 
 sys.exit(app.exec_())
